@@ -1,14 +1,16 @@
 """
-Web scraper -tyyppinen ohjelma, jolla haetaan Etuovi.com:ista asuntojen tiedot
-tietystä kaupungista, ja tallennetaan ne tiedostoon.
-HUOM! Saattaa hajota jos sivuston rakenne muuttuu.
-Viimeisin toimiva versio 8.1.2018
+Web scraper for getting apartment prices from Etuovi.com. Might break if
+the website changes.
+Samuli Romo 8.1.2018
 """
 
 import bs4 as bs, requests, datetime, json
 
 
 def parse_pages(number):
+    """This method returns the search results, parses them and saves the
+information, and repeats the process until it gets to the end of search results.
+"""
     res = requests.get("{}&rd=50&page={}".format(link, number))
     soup = bs.BeautifulSoup(res.text, 'lxml')
     for column in soup.find_all("a", {"class" : "facts"}):
@@ -48,6 +50,8 @@ def parse_pages(number):
 
 
 def handle_number(string):
+    """This method will modify price and size information so they will be easier
+to operate on"""
     return "".join(string.split("m")[0].split("€")[0].split(" ")).replace(",",".")
 
 
@@ -55,6 +59,7 @@ cities = {}
 apartments = []
 index = 0
 link = ""
+
 
 try:
     cities = json.load(open("links.txt"))
@@ -70,11 +75,10 @@ else:
     link = cities[city]
     print(link)
 
-
 parse_pages(1)
 
-
 output = "{}_asunnot_{}.csv".format(city, datetime.date.today())
+
 try:
     with open(output,"w+")as output:
         output.write("type,area,size,price,year\n")
