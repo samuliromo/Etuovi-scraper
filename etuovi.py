@@ -4,7 +4,7 @@ the website changes.
 Samuli Romo 8.1.2018
 """
 
-import bs4 as bs, requests, datetime, json
+import bs4 as bs, requests, datetime, json, sys
 
 
 def parse_pages(number):
@@ -54,27 +54,34 @@ def handle_number(string):
 to operate on"""
     return "".join(string.split("m")[0].split("€")[0].split(" ")).replace(",",".")
 
-
+	
 cities = {}
 apartments = []
 index = 0
+city = ""
 link = ""
-
 
 try:
     cities = json.load(open("links.txt"))
 except Exception as e:
     print(e)
 
-city = input("Anna kaupungin nimi:")
-if city not in cities:
-    link = input("Anna Etuovi.com hakutuloksien linkki muodossa https://www.etuovi.com/myytavat-asunnot/tulokset?haku=M0123456789 (ei mitään ensimmäisen numeron jälkeen):")
-    cities[city] = link
-    print(link)
+if len(sys.argv) > 1:
+    city = sys.argv[1]
 else:
-    link = cities[city]
-    print(link)
+    city = input("Anna kaupungin nimi:")
 
+try:
+    if city not in cities:
+        link = input("Anna Etuovi.com hakutuloksien linkki muodossa https://www.etuovi.com/myytavat-asunnot/tulokset?haku=M0123456789 (ei mitään ensimmäisen numeron jälkeen):")
+        cities[city] = link
+        print(link)
+    else:
+        link = cities[city]
+        print(link)
+except:
+    print("Virheellinen url-osoite")
+    
 parse_pages(1)
 
 output = "{}_asunnot_{}.csv".format(city, datetime.date.today())
