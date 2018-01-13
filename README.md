@@ -1,4 +1,4 @@
-# etuovi-scraper
+# Etuovi-scraper
 Python script for downloading apartment price information from Etuovi.com
 
 This is a simple program that lets you download house and apartment price information from Etuovi.com. It downloads apartment type, price, area, size in square meters, and the year of construction for every apartment from the city that the user specifies in the beginning, and outputs it to a csv-file. The information may be used to do some statistical analysis, for example to see how price changes vary in different areas within one city.
