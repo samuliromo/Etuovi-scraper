@@ -21,14 +21,16 @@ number : int
         print("Virheellinen url")
         return
     soup = bs.BeautifulSoup(res.text, 'lxml')
-    for column in soup.find_all("a", {"class": "facts"}):
+    for column in soup.find_all("li", {"class": "residental"}):
         try:
             apartment_info = []
-
+            apartment_info.append(column["id"])
+            
+                
             a_type = column.find("div", {"class": "type"})
             a_type = a_type.find("label")
             apartment_info.append(a_type.text)
-
+                
             address = column.find("div", {"class": "address"})
             area = address.find("span")
             apartment_info.append(area.text.split(",")[0].split(" ")[0])
@@ -44,11 +46,12 @@ number : int
             year = column.find("div", {"class": "year"})
             built = year.find("span")
             apartment_info.append(built.text)
-
+                
             apartments.append(apartment_info)
             print(apartment_info)
-        except:
-            print("puutteelliset tiedot: " + str(apartment_info))
+        except Exception as e:
+            #print("puutteelliset tiedot: " + str(apartment_info))
+            print(e)
 
     print("sivu: " + str(number))
     print(len(apartments))
