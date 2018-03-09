@@ -4,7 +4,7 @@ the website changes.
 Samuli Romo 8.1.2018
 """
 
-import bs4 as bs, requests, datetime, json, sys
+import bs4 as bs, pandas as pd, requests, datetime, json, sys
 
 
 def parse_pages(number):
@@ -49,9 +49,8 @@ number : int
                 
             apartments.append(apartment_info)
             print(apartment_info)
-        except Exception as e:
-            #print("puutteelliset tiedot: " + str(apartment_info))
-            print(e)
+        except:
+            print("puutteelliset tiedot: " + str(apartment_info))
 
     print("sivu: " + str(number))
     print(len(apartments))
@@ -78,7 +77,7 @@ city = ""
 link = ""
 
 try:
-    cities = json.load(open("links.txt"))
+    cities = json.load(open("cities.json"))
 except Exception as e:
     print(e)
 
@@ -103,13 +102,11 @@ except:
 
 parse_pages(1)
 
-output = "{}_asunnot_{}.csv".format(city, datetime.date.today())
+filename = "{}_asunnot_{}.csv".format(city, datetime.date.today())
+df = pd.DataFrame(apartments, columns = ['id', 'type', 'area', 'size', 'price', 'year'])
 
 try:
-    with open(output, "w+")as output:
-        output.write("type,area,size,price,year\n")
-        for apartment in apartments:
-            output.write(",".join(apartment) + "\n")
-        json.dump(cities, open("links.txt", "w"))
+    df.to_csv(filename, encoding='utf-8', index=False)
+    json.dump(cities, open("cities.json", "w"))
 except Exception as e:
     print(e)
