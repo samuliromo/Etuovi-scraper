@@ -48,12 +48,11 @@ number : int
             apartment_info.append(built.text)
                 
             apartments.append(apartment_info)
-            print(apartment_info)
         except:
             print("puutteelliset tiedot: " + str(apartment_info))
 
     print("sivu: " + str(number))
-    print(len(apartments))
+    print("asuntoja: " + len(apartments))
     button = soup.find("a", {"title": "Seuraava"})
     if "disabled" not in button["class"]:
         parse_pages(number + 1)
@@ -67,7 +66,7 @@ Parameters
 string : str
     String to be parsed for numbers
 """
-    return "".join(string.split("m")[0].split("€")[0].split(" ")).replace(",", ".")
+    return float("".join(string.split("m")[0].split("€")[0].split(" ")).replace(",", "."))
 
 
 cities = {}
